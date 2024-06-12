@@ -190,6 +190,9 @@
     "Closed": "داخراوە",
     "Processing": "چالاکردن",
     "Completed": "تەواوبوو",
-    "Rejected": "ڕەتکراو"
+    "Rejected": "ڕەتکراو",
+    "Output File": "فایلی دەستکاری",
+    "Click here to open in new tab": "کلیک لێرە بکە بۆ کردنەوەی لاپەڕەیەکی نوێ",
+    "No output file available": "هیچ فایلێکی دەستکاری بەردەست نییە"
   }
   

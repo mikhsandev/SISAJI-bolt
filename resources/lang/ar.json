@@ -214,5 +214,8 @@
   "Closed": "مغلق",
   "Processing": "قيد المعالجة",
   "Completed": "مكتمل",
-  "Rejected": "مرفوض"
+  "Rejected": "مرفوض",
+  "Output File": "ملف الإخراج",
+  "Click here to open in new tab": "انقر هنا لفتح في علامة تبويب جديدة",
+  "No output file available": "لا يتوفر ملف إخراج"
 }

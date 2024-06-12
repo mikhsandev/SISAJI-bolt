@@ -77,6 +77,19 @@
                             {!! nl2br($response->notes) !!}
                         </div>
 
+                        <br>
+                        @if($response->output)
+                            <div class="flex flex-col">
+                                <span>{{ __('Output File') }}:</span>
+                                <a href="{{ Storage::disk(config('zeus-bolt.uploadDisk'))->url($file) }}" target="_blank">{{ __('Click here to open in new tab') }}</a>
+                            </div>
+                        @else
+                            <div class="flex flex-col">
+                                <span>{{ __('Output File') }}:</span>
+                                <p>{{ __('No output file available') }}</p>
+                            </div>
+                        @endif
+
                     </x-filament::section>
                 </div>
             </div>

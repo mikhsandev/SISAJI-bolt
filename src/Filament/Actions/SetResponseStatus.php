@@ -3,6 +3,7 @@
 namespace LaraZeus\Bolt\Filament\Actions;
 
 use Closure;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Tables\Actions\Action;
@@ -36,6 +37,7 @@ class SetResponseStatus extends Action
         $this->action(function (array $data): void {
             $this->record->status = $data['status'];
             $this->record->notes = $data['notes'];
+            $this->record->output = $data['output'];
             $this->record->save();
         });
 
@@ -48,6 +50,11 @@ class SetResponseStatus extends Action
             Textarea::make('notes')
                 ->default(fn (Response $record) => $record->notes)
                 ->label(__('Notes')),
+            FileUpload::make('output')
+                ->disk(config('zeus-bolt.uploadDisk'))
+                ->directory(config('zeus-bolt.uploadDirectory'))
+                ->visibility(config('zeus-bolt.uploadVisibility'))
+                ->label(__('Output')),
         ]);
     }
 
