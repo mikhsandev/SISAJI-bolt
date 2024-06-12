@@ -186,5 +186,9 @@
   "Hint Color" :"Hint Color",
   "Textarea": "Textarea",
   "Paragraph": "Paragraph",
-  "Color Picker": "Color Picker"
+  "Color Picker": "Color Picker",
+  "Closed": "Fermé",
+  "Processing": "En cours de traitement",
+  "Completed": "Terminé",
+  "Rejected": "Rejeté"
 }

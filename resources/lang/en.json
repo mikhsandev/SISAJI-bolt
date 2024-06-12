@@ -204,5 +204,9 @@
   "View Form": "View Form",
   "Thanks": "Thanks",
   "New Submission in": "New Submission in",
-  "Form Links": "Form Links"
+  "Form Links": "Form Links",
+  "Closed": "Closed",
+  "Processing": "Processing",
+  "Completed": "Completed",
+  "Rejected": "Rejected"
 }

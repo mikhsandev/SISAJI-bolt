@@ -210,5 +210,9 @@
   "View Form": "عرض",
   "Thanks": "شكرا لك",
   "New Submission in": "لديك سجل جديد في النموذج",
-  "Form Links": "روابط النموذج"
+  "Form Links": "روابط النموذج",
+  "Closed": "مغلق",
+  "Processing": "قيد المعالجة",
+  "Completed": "مكتمل",
+  "Rejected": "مرفوض"
 }

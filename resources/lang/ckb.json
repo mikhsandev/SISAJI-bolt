@@ -186,6 +186,10 @@
     "Hint Color" :"ڕەنگی ئاماژە",
     "Textarea": "ناوچەی دەق",
     "Paragraph": "پەرەگراف",
-    "Color Picker": "ڕەنگ هەڵبژاردە"
+    "Color Picker": "ڕەنگ هەڵبژاردە",
+    "Closed": "داخراوە",
+    "Processing": "چالاکردن",
+    "Completed": "تەواوبوو",
+    "Rejected": "ڕەتکراو"
   }
   
