@@ -41,11 +41,19 @@ class ResponsesPerMonth extends ChartWidget
     {
         $label = null;
 
-        $data = Trend::model(BoltPlugin::getModel('Response'))
-            ->between(
-                start: now()->startOfYear(),
-                end: now()->endOfYear(),
-            );
+        if (! auth()->user()->hasRole(['Admin Super', 'Admin'])) {
+            $data = Trend::query(BoltPlugin::getModel('Response')::query()->where('form_id', $this->record->id)->where('user_id', auth()->id()))
+                ->between(
+                    start: now()->startOfYear(),
+                    end: now()->endOfYear(),
+                );
+        } else {
+            $data = Trend::model(BoltPlugin::getModel('Response'))
+                ->between(
+                    start: now()->startOfYear(),
+                    end: now()->endOfYear(),
+                );
+        }
 
         if ($this->filter == 'per_day') {
             $label = __('Per day');

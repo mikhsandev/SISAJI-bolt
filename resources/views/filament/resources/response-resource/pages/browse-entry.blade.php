@@ -34,12 +34,6 @@
                     <span>{{ __('By') }} {{ __('Visitor') }}</span>
                 @else
                     <div class="flex gap-2 items-center">
-                        <x-filament::avatar
-                                class="rounded-full"
-                                size="lg"
-                                :src="$getRecord->user->avatar"
-                                :alt="($getRecord->user->{config('auth.providers.users.model')::getBoltUserFullNameAttribute()}) ?? ''"
-                        />
                         <p class="flex flex-col gap-1">
                             <span>{{ ($getRecord->user->{config('auth.providers.users.model')::getBoltUserFullNameAttribute()}) ?? '' }}</span>
                             <span>{{ ($getRecord->user->email) ?? '' }}</span>

@@ -132,12 +132,22 @@ class Form extends Model
     /** @phpstan-return hasMany<Response> */
     public function responses(): hasMany
     {
+        if (auth()->user()->role !== 'Admin Super' && auth()->user()->role !== 'Admin') {
+            return $this->hasMany(config('zeus-bolt.models.Response'))->where('user_id', auth()->user()->id);
+        }
+        
         return $this->hasMany(config('zeus-bolt.models.Response'));
     }
 
     /** @phpstan-return hasMany<FieldResponse> */
     public function fieldsResponses(): HasMany
     {
+        if (auth()->user()->role !== 'Admin Super' && auth()->user()->role !== 'Admin') {
+            return $this->hasMany(config('zeus-bolt.models.FieldResponse'))->whereHas('parentResponse', function ($query) {
+                $query->where('user_id', auth()->user()->id);
+            });
+        }
+
         return $this->hasMany(config('zeus-bolt.models.FieldResponse'));
     }
 

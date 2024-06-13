@@ -9,8 +9,12 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Contracts\Pagination\CursorPaginator;
+use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Collection;
 use LaraZeus\Bolt\BoltPlugin;
 use LaraZeus\Bolt\Filament\Actions\SetResponseStatus;
 use LaraZeus\Bolt\Filament\Exports\ResponseExporter;
@@ -40,7 +44,7 @@ class ManageResponses extends ManageRelatedRecords
                 ->searchable(false)
                 ->label(__('Avatar'))
                 ->circular()
-                ->toggleable(),
+                ->toggleable(isToggledHiddenByDefault: true),
 
             TextColumn::make('user.' . $getUserModel)
                 ->label(__('Name'))
@@ -64,7 +68,7 @@ class ManageResponses extends ManageRelatedRecords
                 ->label(__('notes'))
                 ->sortable()
                 ->searchable()
-                ->toggleable(),
+                ->toggleable(isToggledHiddenByDefault: true),
         ];
 
         /**
@@ -148,5 +152,40 @@ class ManageResponses extends ManageRelatedRecords
     public function getTitle(): string
     {
         return __('Entries Report');
+    }
+
+    public function getTableRecords(): Collection | Paginator | CursorPaginator
+    {
+        $formId = $this->record->id;
+
+        if ($translatableContentDriver = $this->makeFilamentTranslatableContentDriver()) {
+            $setRecordLocales = function (Collection | Paginator | CursorPaginator $records) use ($translatableContentDriver): Collection | Paginator | CursorPaginator {
+                $records->transform(fn (Model $record) => $translatableContentDriver->setRecordLocale($record));
+
+                return $records;
+            };
+        } else {
+            $setRecordLocales = fn (Collection | Paginator | CursorPaginator $records): Collection | Paginator | CursorPaginator => $records;
+        }
+
+        if ($this->cachedTableRecords) {
+            return $setRecordLocales($this->cachedTableRecords);
+        }
+
+        $query = $this->getFilteredSortedTableQuery();
+
+        // If role is not 'Admin Super', and not 'Admin': filter by user ID
+        if (! auth()->user()->hasRole('Admin Super') && ! auth()->user()->hasRole('Admin')) {
+            $query->where('user_id', auth()->id());
+        }
+
+        if (
+            (! $this->getTable()->isPaginated()) ||
+            ($this->isTableReordering() && (! $this->getTable()->isPaginatedWhileReordering()))
+        ) {
+            return $setRecordLocales($this->cachedTableRecords = $this->hydratePivotRelationForTableRecords($query->get()));
+        }
+
+        return $setRecordLocales($this->cachedTableRecords = $this->hydratePivotRelationForTableRecords($this->paginateTableQuery($query)));
     }
 }

@@ -178,9 +178,18 @@ class FormResource extends BoltResource
                     ->label(__('Category')),
             ])
             ->bulkActions([
-                DeleteBulkAction::make(),
-                ForceDeleteBulkAction::make(),
-                RestoreBulkAction::make(),
+                DeleteBulkAction::make()
+                    ->visible(function () {
+                        return auth()->user()->hasRole(['Admin Super']);
+                    }),
+                ForceDeleteBulkAction::make()
+                    ->visible(function () {
+                        return auth()->user()->hasRole(['Admin Super']);
+                    }),
+                RestoreBulkAction::make()
+                    ->visible(function () {
+                        return auth()->user()->hasRole(['Admin Super']);
+                    }),
             ]);
     }
 
@@ -236,11 +245,26 @@ class FormResource extends BoltResource
     {
         $action = [
             ViewAction::make(),
-            EditAction::make('edit'),
-            ReplicateFormAction::make(),
-            RestoreAction::make(),
-            DeleteAction::make(),
-            ForceDeleteAction::make(),
+            EditAction::make('edit')
+                ->visible(function ($record) {
+                    return auth()->user()->hasRole(['Admin Super']);
+                }),
+            ReplicateFormAction::make()
+                ->visible(function ($record) {
+                    return auth()->user()->hasRole(['Admin Super']);
+                }),
+            RestoreAction::make()
+                ->visible(function ($record) {
+                    return auth()->user()->hasRole(['Admin Super']);
+                }),
+            DeleteAction::make()
+                ->visible(function ($record) {
+                    return auth()->user()->hasRole(['Admin Super']);
+                }),
+            ForceDeleteAction::make()
+                ->visible(function ($record) {
+                    return auth()->user()->hasRole(['Admin Super']);
+                }),
 
             ActionGroup::make([
                 Action::make('entries')

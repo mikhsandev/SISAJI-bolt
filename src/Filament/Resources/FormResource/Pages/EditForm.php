@@ -47,4 +47,9 @@ class EditForm extends EditRecord
                 ->openUrlInNewTab(),
         ];
     }
+
+    public static function canAccess(array $parameters = []): bool
+    {
+        return auth()->user()->hasRole(['Admin Super']);
+    }
 }
