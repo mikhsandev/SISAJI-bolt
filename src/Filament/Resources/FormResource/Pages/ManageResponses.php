@@ -175,7 +175,7 @@ class ManageResponses extends ManageRelatedRecords
         $query = $this->getFilteredSortedTableQuery();
 
         // If role is not 'Admin Super', and not 'Admin': filter by user ID
-        if (! auth()->user()->hasRole('Admin Super') && ! auth()->user()->hasRole('Admin')) {
+        if (! auth()->user()->hasRole(['Admin Super', 'Admin'])) {
             $query->where('user_id', auth()->id());
         }
 
