@@ -208,5 +208,8 @@
   "Closed": "Closed",
   "Processing": "Processing",
   "Completed": "Completed",
-  "Rejected": "Rejected"
+  "Rejected": "Rejected",
+  "Output File": "Output File",
+  "Click here to open in new tab": "Click here to open in new tab",
+  "No output file available": "No output file available"
 }

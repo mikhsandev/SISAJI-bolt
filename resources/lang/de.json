@@ -190,5 +190,8 @@
     "Closed": "Geschlossen",
     "Processing": "In Bearbeitung",
     "Completed": "Abgeschlossen",
-    "Rejected": "Abgelehnt"
+    "Rejected": "Abgelehnt",
+    "Output File": "Ausgabedatei",
+    "Click here to open in new tab": "Hier klicken, um in einem neuen Tab zu öffnen",
+    "No output file available": "Keine Ausgabedatei verfügbar"
 }

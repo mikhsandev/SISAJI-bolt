@@ -208,5 +208,8 @@
   "Closed": "Ditutup",
   "Processing": "Sedang Diproses",
   "Completed": "Selesai",
-  "Rejected": "Ditolak"
+  "Rejected": "Ditolak",
+  "Output File": "Berkas Output",
+  "Click here to open in new tab": "Klik di sini untuk membuka di tab baru",
+  "No output file available": "Tidak ada berkas output yang tersedia"
 }
