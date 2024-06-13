@@ -51,6 +51,7 @@ class SetResponseStatus extends Action
                 ->default(fn (Response $record) => $record->notes)
                 ->label(__('Notes')),
             FileUpload::make('output')
+                ->default(fn (Response $record) => $record->output)
                 ->disk(config('zeus-bolt.uploadDisk'))
                 ->directory(config('zeus-bolt.uploadDirectory'))
                 ->visibility(config('zeus-bolt.uploadVisibility'))
