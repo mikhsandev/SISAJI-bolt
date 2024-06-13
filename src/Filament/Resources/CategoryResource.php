@@ -94,7 +94,7 @@ class CategoryResource extends BoltResource
                 ImageColumn::make('logo')
                     ->disk(config('zeus-bolt.uploadDisk'))
                     ->visibility(config('zeus-bolt.uploadVisibility'))
-                    ->toggleable()
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->label(__('Logo')),
                 TextColumn::make('name')
                     ->label(__('Name'))
@@ -116,10 +116,14 @@ class CategoryResource extends BoltResource
             ->defaultSort('id', 'description')
             ->actions([
                 ActionGroup::make([
-                    EditAction::make(),
-                    DeleteAction::make(),
-                    ForceDeleteAction::make(),
-                    RestoreAction::make(),
+                    EditAction::make()
+                        ->visible(fn () => auth()->user()->hasRole(['Admin Super'])),
+                    DeleteAction::make()
+                        ->visible(fn () => auth()->user()->hasRole(['Admin Super'])),
+                    ForceDeleteAction::make()
+                        ->visible(fn () => auth()->user()->hasRole(['Admin Super'])),
+                    RestoreAction::make()
+                        ->visible(fn () => auth()->user()->hasRole(['Admin Super'])),
                 ]),
             ])
             ->filters([
@@ -134,9 +138,12 @@ class CategoryResource extends BoltResource
                     ->query(fn (Builder $query): Builder => $query->where('is_active', false)),
             ])
             ->bulkActions([
-                DeleteBulkAction::make(),
-                ForceDeleteBulkAction::make(),
-                RestoreBulkAction::make(),
+                DeleteBulkAction::make()
+                    ->visible(fn () => auth()->user()->hasRole(['Admin Super'])),
+                ForceDeleteBulkAction::make()
+                    ->visible(fn () => auth()->user()->hasRole(['Admin Super'])),
+                RestoreBulkAction::make()
+                    ->visible(fn () => auth()->user()->hasRole(['Admin Super'])),
             ]);
     }
 
@@ -171,5 +178,10 @@ class CategoryResource extends BoltResource
     public static function getNavigationLabel(): string
     {
         return __('Categories');
+    }
+
+    public static function canAccess(array $parameters = []): bool
+    {
+        return auth()->user()->hasRole(['Admin Super', 'Admin']);
     }
 }

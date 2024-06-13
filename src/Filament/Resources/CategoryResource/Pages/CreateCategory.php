@@ -18,4 +18,9 @@ class CreateCategory extends CreateRecord
             Actions\LocaleSwitcher::make(),
         ];
     }
+
+    public static function canAccess(array $parameters = []): bool
+    {
+        return auth()->user()->hasRole(['Admin Super']);
+    }
 }

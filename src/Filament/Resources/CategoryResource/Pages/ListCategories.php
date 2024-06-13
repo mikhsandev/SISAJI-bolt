@@ -16,7 +16,8 @@ class ListCategories extends ListRecords
     {
         return [
             Actions\LocaleSwitcher::make(),
-            Actions\CreateAction::make(),
+            Actions\CreateAction::make()
+                ->visible(fn () => auth()->user()->hasRole(['Admin Super'])),
         ];
     }
 }

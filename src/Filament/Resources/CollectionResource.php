@@ -106,8 +106,10 @@ class CollectionResource extends BoltResource
             ])
             ->actions([
                 ActionGroup::make([
-                    EditAction::make(),
-                    DeleteAction::make(),
+                    EditAction::make()
+                        ->visible(fn () => auth()->user()->hasRole(['Admin Super'])),
+                    DeleteAction::make()
+                        ->visible(fn () => auth()->user()->hasRole(['Admin Super'])),
                 ]),
             ]);
     }
@@ -126,5 +128,10 @@ class CollectionResource extends BoltResource
         return [
             EditCollectionWarning::class,
         ];
+    }
+
+    public static function canAccess(array $parameters = []): bool
+    {
+        return auth()->user()->hasRole(['Admin Super', 'Admin']);
     }
 }

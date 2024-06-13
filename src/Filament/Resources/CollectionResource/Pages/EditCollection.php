@@ -16,4 +16,9 @@ class EditCollection extends EditRecord
             EditCollectionWarning::class,
         ];
     }
+
+    public static function canAccess(array $parameters = []): bool
+    {
+        return auth()->user()->hasRole(['Admin Super']);
+    }
 }
