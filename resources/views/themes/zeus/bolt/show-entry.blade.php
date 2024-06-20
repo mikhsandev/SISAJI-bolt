@@ -90,6 +90,21 @@
                             </div>
                         @endif
 
+                        <br>
+                        @if ($response->form_id === 4)
+                            @if($response->kp4)
+                                <div class="flex flex-col">
+                                    <span>{{ __('KP-4 File') }}:</span>
+                                    <a href="{{ Storage::disk(config('zeus-bolt.uploadDisk'))->url($response->kp4) }}" target="_blank">{{ __('Click here to open in new tab') }}</a>
+                                </div>
+                            @else
+                                <div class="flex flex-col">
+                                    <span>{{ __('KP-4 File') }}:</span>
+                                    <p>{{ __('Belum ada file KP-4 yang sudah ditandatangani') }}</p>
+                                </div>
+                            @endif
+                        @endif
+
                     </x-filament::section>
                 </div>
             </div>

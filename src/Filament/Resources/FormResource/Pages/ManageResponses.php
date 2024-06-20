@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
 use LaraZeus\Bolt\BoltPlugin;
+use LaraZeus\Bolt\Filament\Actions\SetKp4WithTtdFile;
 use LaraZeus\Bolt\Filament\Actions\SetResponseStatus;
 use LaraZeus\Bolt\Filament\Exports\ResponseExporter;
 use LaraZeus\Bolt\Filament\Resources\FormResource;
@@ -38,38 +39,7 @@ class ManageResponses extends ManageRelatedRecords
     {
         $getUserModel = config('auth.providers.users.model')::getBoltUserFullNameAttribute();
 
-        $mainColumns = [
-            ImageColumn::make('user.avatar')
-                ->sortable(false)
-                ->searchable(false)
-                ->label(__('Avatar'))
-                ->circular()
-                ->toggleable(isToggledHiddenByDefault: true),
-
-            TextColumn::make('user.' . $getUserModel)
-                ->label(__('Name'))
-                ->toggleable()
-                ->sortable()
-                ->default(__('guest'))
-                ->searchable(),
-
-            TextColumn::make('status')
-                ->toggleable()
-                ->sortable()
-                ->badge()
-                ->label(__('status'))
-                ->formatStateUsing(fn ($state) => __(str($state)->title()->toString()))
-                ->colors(BoltPlugin::getModel('FormsStatus')::pluck('key', 'color')->toArray())
-                ->icons(BoltPlugin::getModel('FormsStatus')::pluck('key', 'icon')->toArray())
-                ->grow(false)
-                ->searchable('status'),
-
-            TextColumn::make('notes')
-                ->label(__('notes'))
-                ->sortable()
-                ->searchable()
-                ->toggleable(isToggledHiddenByDefault: true),
-        ];
+        $mainColumns = [];
 
         /**
          * @var Field $field.
@@ -78,16 +48,52 @@ class ManageResponses extends ManageRelatedRecords
             $getFieldTableColumn = (new $field->type)->TableColumn($field);
 
             if ($getFieldTableColumn !== null) {
+                if ($field->name != 'Nama Pegawai' && $field->name != 'NIP') {
+                    $getFieldTableColumn
+                        ->toggleable(isToggledHiddenByDefault: true);
+                }
                 $mainColumns[] = $getFieldTableColumn;
             }
         }
+
+
+        $mainColumns[] = ImageColumn::make('user.avatar')
+                ->sortable(false)
+                ->searchable(false)
+                ->label(__('Avatar'))
+                ->circular()
+                ->toggleable(isToggledHiddenByDefault: true);
+
+        $mainColumns[] = TextColumn::make('status')
+                ->toggleable()
+                ->sortable()
+                ->badge()
+                ->label(__('Status'))
+                ->formatStateUsing(fn ($state) => __(str($state)->title()->toString()))
+                ->colors(BoltPlugin::getModel('FormsStatus')::pluck('key', 'color')->toArray())
+                ->icons(BoltPlugin::getModel('FormsStatus')::pluck('key', 'icon')->toArray())
+                ->grow(false)
+                ->searchable('status');
+
+        $mainColumns[] = TextColumn::make('user.' . $getUserModel)
+                ->label(__('Diinput Oleh'))
+                ->toggleable()
+                ->sortable()
+                ->default(__('guest'))
+                ->searchable();
 
         $mainColumns[] = TextColumn::make('created_at')
             ->sortable()
             ->searchable()
             ->dateTime()
-            ->label(__('created at'))
+            ->label(__('Pada Tanggal'))
             ->toggleable();
+
+        $mainColumns[] = TextColumn::make('notes')
+                ->label(__('notes'))
+                ->sortable()
+                ->searchable()
+                ->toggleable(isToggledHiddenByDefault: true);
 
         return $table
             ->query(
@@ -100,10 +106,34 @@ class ManageResponses extends ManageRelatedRecords
             )
             ->columns($mainColumns)
             ->actions([
-                SetResponseStatus::make(),
-                Tables\Actions\DeleteAction::make(),
-                Tables\Actions\ForceDeleteAction::make(),
-                Tables\Actions\RestoreAction::make(),
+                SetResponseStatus::make()->visible(function () {
+                    return auth()->user()->hasRole(['Admin Super', 'Admin']);
+                }),
+                Tables\Actions\Action::make('print')
+                    ->label('Cetak KP-4 tanpa TTD')
+                    ->icon('heroicon-o-printer')
+                    ->tooltip('Cetak KP-4')
+                    ->color('warning')
+                    ->url(function ($record) {
+                        return '/admin/kp-4/' . $record->id;
+                    })
+                    ->openUrlInNewTab()
+                    ->visible(function ($record) {
+                        return $record->form_id === 4;
+                    }),
+                SetKp4WithTtdFile::make()
+                    ->visible(function ($record) {
+                        return $record->form_id === 4;
+                    }),
+                Tables\Actions\DeleteAction::make()->visible(function ($record) {
+                    return auth()->user()->hasRole(['Admin Super', 'Admin']) || ($record->status === 'NEW' && auth()->user()->id === $record->user_id);
+                }),
+                Tables\Actions\ForceDeleteAction::make()->visible(function () {
+                    return auth()->user()->hasRole(['Admin Super', 'Admin']);
+                }),
+                Tables\Actions\RestoreAction::make()->visible(function () {
+                    return auth()->user()->hasRole(['Admin Super', 'Admin']);
+                }),
             ])
             ->filters([
                 Tables\Filters\Filter::make('created_at')
@@ -128,13 +158,22 @@ class ManageResponses extends ManageRelatedRecords
                     ->label(__('Status')),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
-                Tables\Actions\RestoreBulkAction::make(),
-                Tables\Actions\ForceDeleteBulkAction::make(),
+                Tables\Actions\DeleteBulkAction::make()->visible(function () {
+                    return auth()->user()->hasRole(['Admin Super', 'Admin']);
+                }),
+                Tables\Actions\RestoreBulkAction::make()->visible(function () {
+                    return auth()->user()->hasRole(['Admin Super', 'Admin']);
+                }),
+                Tables\Actions\ForceDeleteBulkAction::make()->visible(function () {
+                    return auth()->user()->hasRole(['Admin Super', 'Admin']);
+                }),
 
                 Tables\Actions\ExportBulkAction::make()
                     ->label(__('Export Responses'))
-                    ->exporter(ResponseExporter::class),
+                    ->exporter(ResponseExporter::class)
+                    ->visible(function () {
+                        return auth()->user()->hasRole(['Admin Super', 'Admin']);
+                    }),
             ])
             ->recordUrl(
                 fn (Response $record): string => FormResource::getUrl('viewResponse', [
