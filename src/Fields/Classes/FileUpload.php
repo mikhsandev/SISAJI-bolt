@@ -3,6 +3,7 @@
 namespace LaraZeus\Bolt\Fields\Classes;
 
 use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\TextInput;
 use LaraZeus\Accordion\Forms\Accordion;
 use LaraZeus\Accordion\Forms\Accordions;
 use LaraZeus\Bolt\Facades\Bolt;
@@ -44,6 +45,19 @@ class FileUpload extends FieldsContract
                             self::required(),
                             self::columnSpanFull(),
                             self::htmlID(),
+                            TextInput::make('options.min_size')
+                                ->numeric()
+                                ->default(0)
+                                ->label(__('Min Size (KB)'))
+                                ->hint(__('0 for unlimited. Eg: 1024 for 1MB, 2048 for 2MB')),
+                            TextInput::make('options.max_size')
+                                ->numeric()
+                                ->default(0)
+                                ->label(__('Max Size (KB)'))
+                                ->hint(__('0 for unlimited. Eg: 1024 for 1MB, 2048 for 2MB')),
+                            TextInput::make('options.accepted_file_types')
+                                ->label(__('Accepted MIME File Types'))
+                                ->hint(__('Space separated. Eg: "image/png image/jpeg application/pdf"')),
                         ]),
                     self::hintOptions(),
                     self::visibility($sections),
@@ -92,6 +106,18 @@ class FileUpload extends FieldsContract
 
         if (isset($zeusField->options['allow_multiple']) && $zeusField->options['allow_multiple']) {
             $component = $component->multiple();
+        }
+
+        if (isset($zeusField->options['min_size']) && is_numeric($zeusField->options['min_size']) && $zeusField->options['min_size'] > 0) {
+            $component = $component->minSize($zeusField->options['min_size']);
+        }
+
+        if (isset($zeusField->options['max_size']) && is_numeric($zeusField->options['max_size']) && $zeusField->options['max_size'] > 0) {
+            $component = $component->maxSize($zeusField->options['max_size']);
+        }
+
+        if (isset($zeusField->options['accepted_file_types']) && filled($zeusField->options['accepted_file_types'])) {
+            $component = $component->acceptedFileTypes(explode(' ', $zeusField->options['accepted_file_types']));
         }
 
         return $component;
