@@ -43,7 +43,7 @@ class EditForm extends EditRecord
                 ->icon('heroicon-o-arrow-top-right-on-square')
                 ->tooltip(__('open form'))
                 ->color('warning')
-                ->url('/admin/fill-form?slug=' . $this->record->slug)
+                ->url('/system/fill-form?slug=' . $this->record->slug)
                 ->openUrlInNewTab(),
         ];
     }
