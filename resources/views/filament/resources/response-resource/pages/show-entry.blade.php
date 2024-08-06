@@ -76,31 +76,81 @@
                     </div>
 
                     <br>
-                    @if($response->output)
+                    @if($response->dokumen_permohonan_disetujui)
                         <div class="flex flex-col">
-                            <span>{{ __('Output File') }}:</span>
-                            <a href="{{ Storage::disk(config('zeus-bolt.uploadDisk'))->url($response->output) }}" target="_blank">{{ __('Click here to open in new tab') }}</a>
+                            <span>{{ 'Dokumen permohonan disetujui' }}:</span>
+                            <a href="{{ Storage::disk(config('zeus-bolt.uploadDisk'))->url($response->dokumen_permohonan_disetujui) }}" target="_blank">{{ __('Click here to open in new tab') }}</a>
                         </div>
                     @else
                         <div class="flex flex-col">
-                            <span>{{ __('Output File') }}:</span>
+                            <span>{{ 'Output Layanan' }}:</span>
                             <p>{{ __('No output file available') }}</p>
                         </div>
                     @endif
 
                     <br>
-                    @if ($response->form_id === 4)
-                        @if($response->kp4)
-                            <div class="flex flex-col">
-                                <span>{{ __('KP-4 File') }}:</span>
-                                <a href="{{ Storage::disk(config('zeus-bolt.uploadDisk'))->url($response->kp4) }}" target="_blank">{{ __('Click here to open in new tab') }}</a>
-                            </div>
-                        @else
-                            <div class="flex flex-col">
-                                <span>{{ __('KP-4 File') }}:</span>
-                                <p>{{ __('Belum ada file KP-4 yang sudah ditandatangani') }}</p>
-                            </div>
-                        @endif
+                    @if($response->dokumen_permohonan_ditolak)
+                        <div class="flex flex-col">
+                            <span>{{ 'Dokumen permohonan ditolak' }}:</span>
+                            <a href="{{ Storage::disk(config('zeus-bolt.uploadDisk'))->url($response->dokumen_permohonan_ditolak) }}" target="_blank">{{ __('Click here to open in new tab') }}</a>
+                        </div>
+                    @else
+                        <div class="flex flex-col">
+                            <span>{{ 'Output Layanan' }}:</span>
+                            <p>{{ __('No output file available') }}</p>
+                        </div>
+                    @endif
+
+                    <br>
+                    @if($response->dokumen_pelaksanaan)
+                        <div class="flex flex-col">
+                            <span>{{ 'Dokumen pelaksanaan' }}:</span>
+                            <a href="{{ Storage::disk(config('zeus-bolt.uploadDisk'))->url($response->dokumen_pelaksanaan) }}" target="_blank">{{ __('Click here to open in new tab') }}</a>
+                        </div>
+                    @else
+                        <div class="flex flex-col">
+                            <span>{{ 'Dokumen pelaksanaan' }}:</span>
+                            <p>{{ __('No output file available') }}</p>
+                        </div>
+                    @endif
+
+                    <br>
+                    @if($response->dokumen_tagihan)
+                        <div class="flex flex-col">
+                            <span>{{ 'Dokumen tagihan' }}:</span>
+                            <a href="{{ Storage::disk(config('zeus-bolt.uploadDisk'))->url($response->dokumen_tagihan) }}" target="_blank">{{ __('Click here to open in new tab') }}</a>
+                        </div>
+                    @else
+                        <div class="flex flex-col">
+                            <span>{{ 'Dokumen tagihan' }}:</span>
+                            <p>{{ __('No output file available') }}</p>
+                        </div>
+                    @endif
+
+                    <br>
+                    @if($response->dokumen_bukti_pembayaran)
+                        <div class="flex flex-col">
+                            <span>{{ 'Dokumen bukti pembayaran' }}:</span>
+                            <a href="{{ Storage::disk(config('zeus-bolt.uploadDisk'))->url($response->dokumen_bukti_pembayaran) }}" target="_blank">{{ __('Click here to open in new tab') }}</a>
+                        </div>
+                    @else
+                        <div class="flex flex-col">
+                            <span>{{ 'Output bukti pembayaran' }}:</span>
+                            <p>{{ __('No output file available') }}</p>
+                        </div>
+                    @endif
+
+                    <br>
+                    @if($response->dokumen_output)
+                        <div class="flex flex-col">
+                            <span>{{ 'Dokumen output akhir' }}:</span>
+                            <a href="{{ Storage::disk(config('zeus-bolt.uploadDisk'))->url($response->dokumen_output) }}" target="_blank">{{ __('Click here to open in new tab') }}</a>
+                        </div>
+                    @else
+                        <div class="flex flex-col">
+                            <span>{{ 'Dokumen output akhir' }}:</span>
+                            <p>{{ __('No output file available') }}</p>
+                        </div>
                     @endif
                 </x-filament::section>
             </div>

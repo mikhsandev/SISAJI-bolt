@@ -93,7 +93,7 @@ class FillForms extends Component implements Forms\Contracts\HasForms
         $response = config('zeus-bolt.models.Response')::create([
             'form_id' => $this->zeusForm->id,
             'user_id' => (auth()->check()) ? auth()->user()->id : null,
-            'status' => 'NEW',
+            'status' => 'SURAT_DITERIMA',
             'notes' => '',
         ]);
 

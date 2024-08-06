@@ -14,7 +14,7 @@ class ResponseFactory extends Factory
     {
         return [
             'form_id' => BoltPlugin::getModel('Form')::factory(),
-            'status' => 'NEW',
+            'status' => 'SURAT_DITERIMA',
             'user_id' => 1,
             'notes' => $this->faker->text(),
         ];

@@ -126,7 +126,7 @@ class ManageResponses extends ManageRelatedRecords
                         return $record->form_id === 4;
                     }),
                 Tables\Actions\DeleteAction::make()->visible(function ($record) {
-                    return auth()->user()->hasRole(['Admin Super', 'Admin']) || ($record->status === 'NEW' && auth()->user()->id === $record->user_id);
+                    return auth()->user()->hasRole(['Admin Super', 'Admin']) || ($record->status === 'SURAT_DITERIMA' && auth()->user()->id === $record->user_id);
                 }),
                 Tables\Actions\ForceDeleteAction::make()->visible(function () {
                     return auth()->user()->hasRole(['Admin Super', 'Admin']);

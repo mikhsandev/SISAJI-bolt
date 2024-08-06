@@ -83,33 +83,6 @@ class FormsStatus extends Model
                 'icon' => 'heroicon-o-document',
                 'class' => 'px-2 py-0.5 text-xs rounded-xl text-default-700 bg-default-500/10',
             ],
-            [
-                'key' => 'NEW',
-                'label' => __('New'),
-                'description' => 'used when a new form created by the user or an employee',
-                'color' => 'default',
-                'chartColor' => '#6B7280',
-                'icon' => 'heroicon-o-document',
-                'class' => 'px-2 py-0.5 text-xs rounded-xl text-default-700 bg-default-500/10',
-            ],
-            [
-                'key' => 'OPEN',
-                'label' => __('Open'),
-                'description' => 'used when a new form created by the user or an employee',
-                'color' => 'success',
-                'chartColor' => '#21C55D',
-                'icon' => 'heroicon-o-document',
-                'class' => 'px-2 py-0.5 text-xs rounded-xl text-warning-700 bg-warning-500/10',
-            ],
-            [
-                'key' => 'CLOSE',
-                'label' => __('Closed'),
-                'description' => 'used when a new form created by the user or an employee',
-                'color' => 'danger',
-                'chartColor' => '#EF4444',
-                'icon' => 'heroicon-o-x-circle',
-                'class' => 'px-2 py-0.5 text-xs rounded-xl text-danger-700 bg-danger-500/10',
-            ],
         ];
     }
 

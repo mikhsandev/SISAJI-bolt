@@ -153,7 +153,7 @@ class BoltSeeder extends Seeder
         $response_1 = DB::table(config('zeus-bolt.table-prefix') . 'responses')->insertGetId([
             'form_id' => $form,
             'user_id' => null,
-            'status' => 'NEW',
+            'status' => 'SURAT_DITERIMA',
             'notes' => null,
             'created_at' => now(),
         ]);
@@ -190,7 +190,7 @@ class BoltSeeder extends Seeder
         $response_2 = DB::table(config('zeus-bolt.table-prefix') . 'responses')->insertGetId([
             'form_id' => $form,
             'user_id' => 2,
-            'status' => 'NEW',
+            'status' => 'SURAT_DITERIMA',
             'notes' => null,
             'created_at' => now(),
         ]);
