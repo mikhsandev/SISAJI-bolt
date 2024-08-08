@@ -109,6 +109,11 @@ class ManageResponses extends ManageRelatedRecords
                 SetResponseStatus::make()->visible(function () {
                     return auth()->user()->hasRole(['Admin Super', 'Admin']);
                 }),
+                SetResponseStatus::make()
+                    ->label('Unggah Bukti Pembayaran')
+                    ->visible(function ($record) {
+                        return $record->status === 'MENUNGGU_PEMBAYARAN' && !auth()->user()->hasRole(['Admin Super', 'Admin']);
+                    }),
                 Tables\Actions\Action::make('print')
                     ->label('Cetak KP-4 tanpa TTD')
                     ->icon('heroicon-o-printer')
