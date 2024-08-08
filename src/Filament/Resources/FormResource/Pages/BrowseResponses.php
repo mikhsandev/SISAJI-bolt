@@ -40,7 +40,13 @@ class BrowseResponses extends ManageRelatedRecords
                     ->view('zeus::filament.resources.response-resource.pages.browse-entry'),
             ])
             ->actions([
-                SetResponseStatus::make(),
+                SetResponseStatus::make()
+                    ->label(function ($record) { 
+                        return auth()->user()->hasRole(['Admin Super', 'Admin']) ? __( 'Set Status') : 'Unggah Bukti Pembayaran';
+                    })
+                    ->visible(function ($record) {
+                        return auth()->user()->hasRole(['Admin Super', 'Admin']) || (auth()->user()->hasRole(['Admin Super', 'Admin']) && $record->status === 'SURAT_DITERIMA');
+                    }),
             ], position: ActionsPosition::AfterContent)
             ->filters([
                 SelectFilter::make('status')

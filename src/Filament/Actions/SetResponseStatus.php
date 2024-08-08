@@ -38,7 +38,51 @@ class SetResponseStatus extends Action
         $this->action(function (array $data): void {
             $this->record->status = $data['status'];
             $this->record->notes = $data['notes'];
-            $this->record->output = $data['output'];
+
+            switch ($this->record->status) {
+                case 'PERMOHONAN_DISETUJUI':
+                    if (isset($data['dokumen_permohonan_disetujui'])) {
+                        $this->record->dokumen_permohonan_disetujui = $data['dokumen_permohonan_disetujui'];
+                    }
+                    $this->record->time_status_permohonan_disetujui = now();
+                    break;
+                case 'PERMOHONAN_DITOLAK':
+                    if (isset($data['dokumen_permohonan_ditolak'])) {
+                        $this->record->dokumen_permohonan_ditolak = $data['dokumen_permohonan_ditolak'];
+                    }
+                    $this->record->time_status_permohonan_ditolak = now();
+                    break;
+                case 'PELAKSANAAN':
+                    if (isset($data['dokumen_pelaksanaan'])) {
+                        $this->record->dokumen_pelaksanaan = $data['dokumen_pelaksanaan'];
+                    }
+                    $this->record->time_status_pelaksanaan = now();
+                    break;
+                case 'MENUNGGU_PEMBAYARAN':
+                    if (isset($data['dokumen_tagihan'])) {
+                        $this->record->dokumen_tagihan = $data['dokumen_tagihan'];
+                    }
+                    if (isset($data['dokumen_bukti_pembayaran'])) {
+                        $this->record->dokumen_bukti_pembayaran = $data['dokumen_bukti_pembayaran'];
+                        $this->record->time_dokumen_bukti_pembayaran = now();
+                    }
+                    $this->record->time_status_menunggu_pembayaran = now();
+                    break;
+                case 'PEMBAYARAN_DITERIMA':
+                    if (isset($data['dokumen_bukti_pembayaran'])) {
+                        $this->record->dokumen_bukti_pembayaran = $data['dokumen_bukti_pembayaran'];
+                        $this->record->time_dokumen_bukti_pembayaran = now();
+                    }
+                    $this->record->time_status_pembayaran_diterima = now();
+                    break;
+                case 'HASIL_TERBIT':
+                    if (isset($data['dokumen_output'])) {
+                        $this->record->dokumen_output = $data['dokumen_output'];
+                    }
+                    $this->record->time_status_hasil_terbit = now();
+                    break;
+            }
+
             $this->record->save();
         });
 
@@ -49,12 +93,12 @@ class SetResponseStatus extends Action
                 ->options(BoltPlugin::getModel('FormsStatus')::query()->pluck('label', 'key'))
                 ->required()
                 ->live()
-                ->hidden(!auth()->user()->hasRole(['Admin Super', 'Admin'])),
+                ->visible(auth()->user()->hasRole(['Admin Super', 'Admin'])),
 
             Textarea::make('notes')
                 ->default(fn (Response $record) => $record->notes)
                 ->label(__('Notes'))
-                ->hidden(!auth()->user()->hasRole(['Admin Super', 'Admin'])),
+                ->visible(auth()->user()->hasRole(['Admin Super', 'Admin'])),
 
             FileUpload::make('dokumen_permohonan_disetujui')
                 ->default(fn (Response $record) => $record->dokumen_permohonan_disetujui)
@@ -62,7 +106,7 @@ class SetResponseStatus extends Action
                 ->directory(config('zeus-bolt.uploadDirectory'))
                 ->visibility(config('zeus-bolt.uploadVisibility'))
                 ->label('Dokumen Permohonan Disetujui')
-                ->hidden(fn (Get $get): bool => $get('status') != 'PERMOHONAN_DISETUJUI' || !auth()->user()->hasRole(['Admin Super', 'Admin']) ),
+                ->visible(fn (Get $get): bool => $get('status') == 'PERMOHONAN_DISETUJUI' && auth()->user()->hasRole(['Admin Super', 'Admin']) ),
 
             FileUpload::make('dokumen_permohonan_ditolak')
                 ->default(fn (Response $record) => $record->dokumen_permohonan_ditolak)
@@ -70,7 +114,7 @@ class SetResponseStatus extends Action
                 ->directory(config('zeus-bolt.uploadDirectory'))
                 ->visibility(config('zeus-bolt.uploadVisibility'))
                 ->label('Dokumen Permohonan Ditolak')
-                ->hidden(fn (Get $get): bool => $get('status') != 'PERMOHONAN_DITOLAK' || !auth()->user()->hasRole(['Admin Super', 'Admin']) ),
+                ->visible(fn (Get $get): bool => $get('status') == 'PERMOHONAN_DITOLAK' && auth()->user()->hasRole(['Admin Super', 'Admin']) ),
 
             FileUpload::make('dokumen_pelaksanaan')
                 ->default(fn (Response $record) => $record->dokumen_pelaksanaan)
@@ -78,7 +122,7 @@ class SetResponseStatus extends Action
                 ->directory(config('zeus-bolt.uploadDirectory'))
                 ->visibility(config('zeus-bolt.uploadVisibility'))
                 ->label('Dokumen Pelaksanaan')
-                ->hidden(fn (Get $get): bool => $get('status') != 'PELAKSANAAN' || !auth()->user()->hasRole(['Admin Super', 'Admin']) ),
+                ->visible(fn (Get $get): bool => $get('status') == 'PELAKSANAAN' && auth()->user()->hasRole(['Admin Super', 'Admin']) ),
 
             FileUpload::make('dokumen_tagihan')
                 ->default(fn (Response $record) => $record->dokumen_tagihan)
@@ -86,7 +130,7 @@ class SetResponseStatus extends Action
                 ->directory(config('zeus-bolt.uploadDirectory'))
                 ->visibility(config('zeus-bolt.uploadVisibility'))
                 ->label('Dokumen Tagihan')
-                ->hidden(fn (Get $get): bool => $get('status') != 'MENUNGGU_PEMBAYARAN' || !auth()->user()->hasRole(['Admin Super', 'Admin']) ),
+                ->visible(fn (Get $get): bool => $get('status') == 'MENUNGGU_PEMBAYARAN' && auth()->user()->hasRole(['Admin Super', 'Admin']) ),
 
             FileUpload::make('dokumen_bukti_pembayaran')
                 ->default(fn (Response $record) => $record->dokumen_bukti_pembayaran)
@@ -94,7 +138,7 @@ class SetResponseStatus extends Action
                 ->directory(config('zeus-bolt.uploadDirectory'))
                 ->visibility(config('zeus-bolt.uploadVisibility'))
                 ->label('Dokumen Bukti Pembayaran')
-                ->hidden(fn (Get $get): bool => $get('status') != 'MENUNGGU_PEMBAYARAN' ),
+                ->visible(fn (Get $get): bool => (auth()->user()->hasRole('User') && $get('status') == 'MENUNGGU_PEMBAYARAN') || $get('status') == 'PEMBAYARAN_DITERIMA' ),
 
             FileUpload::make('dokumen_output')
                 ->default(fn (Response $record) => $record->dokumen_output)
@@ -102,7 +146,7 @@ class SetResponseStatus extends Action
                 ->directory(config('zeus-bolt.uploadDirectory'))
                 ->visibility(config('zeus-bolt.uploadVisibility'))
                 ->label('Dokumen Output')
-                ->hidden(fn (Get $get): bool => $get('status') != 'HASIL_TERBIT' || !auth()->user()->hasRole(['Admin Super', 'Admin']) )
+                ->visible(fn (Get $get): bool => $get('status') == 'HASIL_TERBIT' && auth()->user()->hasRole(['Admin Super', 'Admin']) )
         ]);
     }
 

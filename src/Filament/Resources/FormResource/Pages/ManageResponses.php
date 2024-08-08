@@ -106,29 +106,12 @@ class ManageResponses extends ManageRelatedRecords
             )
             ->columns($mainColumns)
             ->actions([
-                SetResponseStatus::make()->visible(function () {
-                    return auth()->user()->hasRole(['Admin Super', 'Admin']);
-                }),
                 SetResponseStatus::make()
-                    ->label('Unggah Bukti Pembayaran')
-                    ->visible(function ($record) {
-                        return $record->status === 'MENUNGGU_PEMBAYARAN' && !auth()->user()->hasRole(['Admin Super', 'Admin']);
-                    }),
-                Tables\Actions\Action::make('print')
-                    ->label('Cetak KP-4 tanpa TTD')
-                    ->icon('heroicon-o-printer')
-                    ->tooltip('Cetak KP-4')
-                    ->color('warning')
-                    ->url(function ($record) {
-                        return '/admin/kp-4/' . $record->id;
+                    ->label(function ($record) { 
+                        return auth()->user()->hasRole(['Admin Super', 'Admin']) ? __( 'Set Status') : 'Unggah Bukti Pembayaran';
                     })
-                    ->openUrlInNewTab()
                     ->visible(function ($record) {
-                        return $record->form_id === 4;
-                    }),
-                SetKp4WithTtdFile::make()
-                    ->visible(function ($record) {
-                        return $record->form_id === 4;
+                        return auth()->user()->hasRole(['Admin Super', 'Admin']) || (auth()->user()->hasRole(['Admin Super', 'Admin']) && $record->status === 'SURAT_DITERIMA');
                     }),
                 Tables\Actions\DeleteAction::make()->visible(function ($record) {
                     return auth()->user()->hasRole(['Admin Super', 'Admin']) || ($record->status === 'SURAT_DITERIMA' && auth()->user()->id === $record->user_id);
