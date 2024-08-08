@@ -102,7 +102,7 @@
 
             <div class="px-4 py-2 text-center">
                 <x-filament::button type="submit" :color="$zeusForm->options['primary_color'] ?? 'primary'">
-                    {{ __('Save') }}
+                    {{ __('Submit') }}
                 </x-filament::button>
             </div>
 
