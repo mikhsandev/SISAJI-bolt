@@ -31,16 +31,7 @@ class SetResponseStatus extends Action
             return $record->form->extensions === null;
         });
 
-        if (auth()->user()->hasRole(['Admin Super', 'Admin'])) {
-            $this->label(__('Set Status'));
-
-        } else {
-            if ($this->record->status == 'MENUNGGU_PEMBAYARAN') {
-                $this->label(__('Atur Pembayaran'));
-            } else {
-                $this->visible(false);
-            }
-        }
+        $this->label(__('Set Status'));
 
         $this->icon('heroicon-o-tag');
 
