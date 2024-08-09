@@ -101,7 +101,7 @@ class ManageResponses extends ManageRelatedRecords
                 ->toggleable(isToggledHiddenByDefault: true);
 
         // Get field response from lampiran field
-        $lampiranFieldResponse = $lampiranField ? $lampiranField->fieldResponses->first()->response : null;
+        $lampiranFieldResponse = $lampiranField && $lampiranField->fieldResponses->first() ? $lampiranField->fieldResponses->first()->response : null;
 
         return $table
             ->query(
