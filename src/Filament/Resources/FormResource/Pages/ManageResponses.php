@@ -41,6 +41,8 @@ class ManageResponses extends ManageRelatedRecords
 
         $mainColumns = [];
 
+        $lampiranField = null;
+
         /**
          * @var Field $field.
          */
@@ -48,11 +50,14 @@ class ManageResponses extends ManageRelatedRecords
             $getFieldTableColumn = (new $field->type)->TableColumn($field);
 
             if ($getFieldTableColumn !== null) {
-                if ($field->name != 'Nama Pegawai' && $field->name != 'NIP') {
+                if (strpos($field->name, 'Nama') === false) {
                     $getFieldTableColumn
                         ->toggleable(isToggledHiddenByDefault: true);
                 }
                 $mainColumns[] = $getFieldTableColumn;
+            }
+            if (strpos($field->name, 'Scan') !== false) {
+                $lampiranField = $field;
             }
         }
 
@@ -95,6 +100,9 @@ class ManageResponses extends ManageRelatedRecords
                 ->searchable()
                 ->toggleable(isToggledHiddenByDefault: true);
 
+        // Get field response from lampiran field
+        $lampiranFieldResponse = $lampiranField ? $lampiranField->fieldResponses->first()->response : null;
+
         return $table
             ->query(
                 BoltPlugin::getModel('Response')::query()
@@ -111,7 +119,27 @@ class ManageResponses extends ManageRelatedRecords
                         return auth()->user()->hasRole(['Admin Super', 'Admin']) ? __( 'Set Status') : 'Unggah Bukti Pembayaran';
                     })
                     ->visible(function ($record) {
-                        return auth()->user()->hasRole(['Admin Super', 'Admin']) || (auth()->user()->hasRole(['Admin Super', 'Admin']) && $record->status === 'SURAT_DITERIMA');
+                        return auth()->user()->hasRole(['Admin Super', 'Admin']) || (auth()->user()->hasRole(['Pelanggan']) && $record->status === 'MENUNGGU_PEMBAYARAN');
+                    }),
+                Tables\Actions\Action::make('permohonan')
+                    ->label('Surat Permohonan')
+                    ->icon('heroicon-o-document')
+                    ->tooltip('Cetak KP-4')
+                    ->color('warning')
+                    ->url('/storage/' . $lampiranFieldResponse)
+                    ->openUrlInNewTab()
+                    ->visible(!empty($lampiranFieldResponse)),
+                Tables\Actions\Action::make('output')
+                    ->label('Dokumen Output')
+                    ->icon('heroicon-o-document')
+                    ->tooltip('Dokumen Output')
+                    ->color('success')
+                    ->url(function ($record) {
+                        return '/storage/' . $record->dokumen_output;
+                    })
+                    ->openUrlInNewTab()
+                    ->visible(function ($record) {
+                        return !empty($record->dokumen_output);
                     }),
                 Tables\Actions\DeleteAction::make()->visible(function ($record) {
                     return auth()->user()->hasRole(['Admin Super', 'Admin']) || ($record->status === 'SURAT_DITERIMA' && auth()->user()->id === $record->user_id);

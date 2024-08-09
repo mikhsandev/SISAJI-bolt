@@ -73,32 +73,126 @@
                     {!! nl2br($getRecord->notes) !!}
                 </div>
 
-                <br>
-                @if($getRecord->output)
+                <br><br>
+                <strong>Status permohonan disetujui</strong><br>
+                @if($getRecord->time_status_permohonan_disetujui)
+                    <span>{{ $getRecord->time_status_permohonan_disetujui }}</span>
+                @else
+                    <span>-</span>
+                @endif
+                @if($getRecord->dokumen_permohonan_disetujui)
                     <div class="flex flex-col">
-                        <span>{{ __('Output File') }}:</span>
-                        <a href="{{ Storage::disk(config('zeus-bolt.uploadDisk'))->url($getRecord->output) }}" target="_blank">{{ __('Click here to open in new tab') }}</a>
+                        <span>{{ 'Dokumen permohonan disetujui' }}:</span>
+                        <a style="color: green; font-weight: bold;" href="{{ Storage::disk(config('zeus-bolt.uploadDisk'))->url($getRecord->dokumen_permohonan_disetujui) }}" target="_blank">Lihat File</a>
                     </div>
                 @else
                     <div class="flex flex-col">
-                        <span>{{ __('Output File') }}:</span>
+                        <span>{{ 'Dokumen permohonan disetujui' }}:</span>
                         <p>{{ __('No output file available') }}</p>
                     </div>
                 @endif
 
-                <br>
-                @if ($getRecord->form_id === 4)
-                    @if($getRecord->kp4)
-                        <div class="flex flex-col">
-                            <span>{{ __('KP-4 File') }}:</span>
-                            <a href="{{ Storage::disk(config('zeus-bolt.uploadDisk'))->url($getRecord->kp4) }}" target="_blank">{{ __('Click here to open in new tab') }}</a>
-                        </div>
-                    @else
-                        <div class="flex flex-col">
-                            <span>{{ __('KP-4 File') }}:</span>
-                            <p>{{ __('Belum ada file KP-4 yang sudah ditandatangani') }}</p>
-                        </div>
-                    @endif
+                <br><br>
+                <strong>Status permohonan ditolak</strong><br>
+                @if($getRecord->time_status_permohonan_ditolak)
+                    <span>{{ $getRecord->time_status_permohonan_ditolak }}</span>
+                @else
+                    <span>-</span>
+                @endif
+                @if($getRecord->dokumen_permohonan_ditolak)
+                    <div class="flex flex-col">
+                        <span>{{ 'Dokumen permohonan ditolak' }}:</span>
+                        <a style="color: green; font-weight: bold;" href="{{ Storage::disk(config('zeus-bolt.uploadDisk'))->url($getRecord->dokumen_permohonan_ditolak) }}" target="_blank">Lihat File</a>
+                    </div>
+                @else
+                    <div class="flex flex-col">
+                        <span>{{ 'Dokumen permohonan ditolak' }}:</span>
+                        <p>{{ __('No output file available') }}</p>
+                    </div>
+                @endif
+
+                <br><br>
+                <strong>Status pelaksanaan</strong><br>
+                @if($getRecord->time_status_pelaksanaan)
+                    <span>{{ $getRecord->time_status_pelaksanaan }}</span>
+                @else
+                    <span>-</span>
+                @endif
+                @if($getRecord->dokumen_pelaksanaan)
+                    <div class="flex flex-col">
+                        <span>{{ 'Dokumen pelaksanaan' }}:</span>
+                        <a style="color: green; font-weight: bold;" href="{{ Storage::disk(config('zeus-bolt.uploadDisk'))->url($getRecord->dokumen_pelaksanaan) }}" target="_blank">Lihat File</a>
+                    </div>
+                @else
+                    <div class="flex flex-col">
+                        <span>{{ 'Dokumen pelaksanaan' }}:</span>
+                        <p>{{ __('No output file available') }}</p>
+                    </div>
+                @endif
+
+                <br><br>
+                <strong>Status menunggu pembayaran</strong><br>
+                @if($getRecord->time_status_menunggu_pembayaran)
+                    <span>{{ $getRecord->time_status_menunggu_pembayaran }}</span>
+                @else
+                    <span>-</span>
+                @endif
+                @if($getRecord->dokumen_tagihan)
+                    <div class="flex flex-col">
+                        <span>{{ 'Dokumen tagihan' }}:</span>
+                        <a style="color: green; font-weight: bold;" href="{{ Storage::disk(config('zeus-bolt.uploadDisk'))->url($getRecord->dokumen_tagihan) }}" target="_blank">Lihat File</a>
+                    </div>
+                @else
+                    <div class="flex flex-col">
+                        <span>{{ 'Dokumen tagihan' }}:</span>
+                        <p>{{ __('No output file available') }}</p>
+                    </div>
+                @endif
+
+                <br><br>
+                <strong>Bukti pembayaran</strong><br>
+                @if($getRecord->time_dokumen_bukti_pembayaran)
+                    <span>{{ $getRecord->time_dokumen_bukti_pembayaran }}</span>
+                @else
+                    <span>-</span>
+                @endif
+                @if($getRecord->dokumen_bukti_pembayaran)
+                    <div class="flex flex-col">
+                        <span>{{ 'Dokumen bukti pembayaran' }}:</span>
+                        <a style="color: green; font-weight: bold;" href="{{ Storage::disk(config('zeus-bolt.uploadDisk'))->url($getRecord->dokumen_bukti_pembayaran) }}" target="_blank">Lihat File</a>
+                    </div>
+                @else
+                    <div class="flex flex-col">
+                        <span>{{ 'Output bukti pembayaran' }}:</span>
+                        <p>{{ __('No output file available') }}</p>
+                    </div>
+                @endif
+
+                <br><br>
+                <strong>Status pembayaran diterima</strong><br>
+                @if($getRecord->time_dokumen_pembayaran_diterima)
+                    <span>{{ $getRecord->time_dokumen_pembayaran_diterima }}</span>
+                @else
+                    <span>-</span>
+                @endif
+
+                <br><br>
+                <strong>Status hasil terbit</strong><br>
+                @if($getRecord->time_status_hasil_terbit)
+                    <span>{{ $getRecord->time_status_hasil_terbit }}</span>
+                @else
+                    <span>-</span>
+                @endif
+                @if($getRecord->dokumen_output)
+                    <div class="flex flex-col">
+                        <span>{{ 'Dokumen output akhir' }}:</span>
+                        <a style="color: green; font-weight: bold;" href="{{ Storage::disk(config('zeus-bolt.uploadDisk'))->url($getRecord->dokumen_output) }}" target="_blank">Lihat File</a>
+                    </div>
+                @else
+                    <div class="flex flex-col">
+                        <span>{{ 'Dokumen output akhir' }}:</span>
+                        <p>{{ __('No output file available') }}</p>
+                    </div>
                 @endif
             </x-filament::section>
         </div>

@@ -75,37 +75,55 @@
                         {!! nl2br($response->notes) !!}
                     </div>
 
-                    <br>
+                    <br><br>
+                    <strong>Status permohonan disetujui</strong><br>
+                    @if($response->time_status_permohonan_disetujui)
+                        <span>{{ $response->time_status_permohonan_disetujui }}</span>
+                    @else
+                        <span>-</span>
+                    @endif
                     @if($response->dokumen_permohonan_disetujui)
                         <div class="flex flex-col">
                             <span>{{ 'Dokumen permohonan disetujui' }}:</span>
-                            <a href="{{ Storage::disk(config('zeus-bolt.uploadDisk'))->url($response->dokumen_permohonan_disetujui) }}" target="_blank">{{ __('Click here to open in new tab') }}</a>
+                            <a style="color: green; font-weight: bold;" href="{{ Storage::disk(config('zeus-bolt.uploadDisk'))->url($response->dokumen_permohonan_disetujui) }}" target="_blank">Lihat File</a>
                         </div>
                     @else
                         <div class="flex flex-col">
-                            <span>{{ 'Output Layanan' }}:</span>
+                            <span>{{ 'Dokumen permohonan disetujui' }}:</span>
                             <p>{{ __('No output file available') }}</p>
                         </div>
                     @endif
 
-                    <br>
+                    <br><br>
+                    <strong>Status permohonan ditolak</strong><br>
+                    @if($response->time_status_permohonan_ditolak)
+                        <span>{{ $response->time_status_permohonan_ditolak }}</span>
+                    @else
+                        <span>-</span>
+                    @endif
                     @if($response->dokumen_permohonan_ditolak)
                         <div class="flex flex-col">
                             <span>{{ 'Dokumen permohonan ditolak' }}:</span>
-                            <a href="{{ Storage::disk(config('zeus-bolt.uploadDisk'))->url($response->dokumen_permohonan_ditolak) }}" target="_blank">{{ __('Click here to open in new tab') }}</a>
+                            <a style="color: green; font-weight: bold;" href="{{ Storage::disk(config('zeus-bolt.uploadDisk'))->url($response->dokumen_permohonan_ditolak) }}" target="_blank">Lihat File</a>
                         </div>
                     @else
                         <div class="flex flex-col">
-                            <span>{{ 'Output Layanan' }}:</span>
+                            <span>{{ 'Dokumen permohonan ditolak' }}:</span>
                             <p>{{ __('No output file available') }}</p>
                         </div>
                     @endif
 
-                    <br>
+                    <br><br>
+                    <strong>Status pelaksanaan</strong><br>
+                    @if($response->time_status_pelaksanaan)
+                        <span>{{ $response->time_status_pelaksanaan }}</span>
+                    @else
+                        <span>-</span>
+                    @endif
                     @if($response->dokumen_pelaksanaan)
                         <div class="flex flex-col">
                             <span>{{ 'Dokumen pelaksanaan' }}:</span>
-                            <a href="{{ Storage::disk(config('zeus-bolt.uploadDisk'))->url($response->dokumen_pelaksanaan) }}" target="_blank">{{ __('Click here to open in new tab') }}</a>
+                            <a style="color: green; font-weight: bold;" href="{{ Storage::disk(config('zeus-bolt.uploadDisk'))->url($response->dokumen_pelaksanaan) }}" target="_blank">Lihat File</a>
                         </div>
                     @else
                         <div class="flex flex-col">
@@ -114,11 +132,17 @@
                         </div>
                     @endif
 
-                    <br>
+                    <br><br>
+                    <strong>Status menunggu pembayaran</strong><br>
+                    @if($response->time_status_menunggu_pembayaran)
+                        <span>{{ $response->time_status_menunggu_pembayaran }}</span>
+                    @else
+                        <span>-</span>
+                    @endif
                     @if($response->dokumen_tagihan)
                         <div class="flex flex-col">
                             <span>{{ 'Dokumen tagihan' }}:</span>
-                            <a href="{{ Storage::disk(config('zeus-bolt.uploadDisk'))->url($response->dokumen_tagihan) }}" target="_blank">{{ __('Click here to open in new tab') }}</a>
+                            <a style="color: green; font-weight: bold;" href="{{ Storage::disk(config('zeus-bolt.uploadDisk'))->url($response->dokumen_tagihan) }}" target="_blank">Lihat File</a>
                         </div>
                     @else
                         <div class="flex flex-col">
@@ -127,11 +151,17 @@
                         </div>
                     @endif
 
-                    <br>
+                    <br><br>
+                    <strong>Bukti pembayaran</strong><br>
+                    @if($response->time_dokumen_bukti_pembayaran)
+                        <span>{{ $response->time_dokumen_bukti_pembayaran }}</span>
+                    @else
+                        <span>-</span>
+                    @endif
                     @if($response->dokumen_bukti_pembayaran)
                         <div class="flex flex-col">
                             <span>{{ 'Dokumen bukti pembayaran' }}:</span>
-                            <a href="{{ Storage::disk(config('zeus-bolt.uploadDisk'))->url($response->dokumen_bukti_pembayaran) }}" target="_blank">{{ __('Click here to open in new tab') }}</a>
+                            <a style="color: green; font-weight: bold;" href="{{ Storage::disk(config('zeus-bolt.uploadDisk'))->url($response->dokumen_bukti_pembayaran) }}" target="_blank">Lihat File</a>
                         </div>
                     @else
                         <div class="flex flex-col">
@@ -140,11 +170,25 @@
                         </div>
                     @endif
 
-                    <br>
+                    <br><br>
+                    <strong>Status pembayaran diterima</strong><br>
+                    @if($response->time_dokumen_pembayaran_diterima)
+                        <span>{{ $response->time_dokumen_pembayaran_diterima }}</span>
+                    @else
+                        <span>-</span>
+                    @endif
+
+                    <br><br>
+                    <strong>Status hasil terbit</strong><br>
+                    @if($response->time_status_hasil_terbit)
+                        <span>{{ $response->time_status_hasil_terbit }}</span>
+                    @else
+                        <span>-</span>
+                    @endif
                     @if($response->dokumen_output)
                         <div class="flex flex-col">
                             <span>{{ 'Dokumen output akhir' }}:</span>
-                            <a href="{{ Storage::disk(config('zeus-bolt.uploadDisk'))->url($response->dokumen_output) }}" target="_blank">{{ __('Click here to open in new tab') }}</a>
+                            <a style="color: green; font-weight: bold;" href="{{ Storage::disk(config('zeus-bolt.uploadDisk'))->url($response->dokumen_output) }}" target="_blank">Lihat File</a>
                         </div>
                     @else
                         <div class="flex flex-col">

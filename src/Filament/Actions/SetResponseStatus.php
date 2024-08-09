@@ -36,8 +36,8 @@ class SetResponseStatus extends Action
         $this->icon('heroicon-o-tag');
 
         $this->action(function (array $data): void {
-            $this->record->status = $data['status'];
-            $this->record->notes = $data['notes'];
+            $this->record->status = $data['status'] ?? $this->record->status;
+            $this->record->notes = $data['notes'] ?? $this->record->notes;
 
             switch ($this->record->status) {
                 case 'PERMOHONAN_DISETUJUI':
@@ -93,7 +93,7 @@ class SetResponseStatus extends Action
                 ->options(BoltPlugin::getModel('FormsStatus')::query()->pluck('label', 'key'))
                 ->required()
                 ->live()
-                ->visible(auth()->user()->hasRole(['Admin Super', 'Admin'])),
+                ->disabled(!auth()->user()->hasRole(['Admin Super', 'Admin'])),
 
             Textarea::make('notes')
                 ->default(fn (Response $record) => $record->notes)
@@ -138,7 +138,7 @@ class SetResponseStatus extends Action
                 ->directory(config('zeus-bolt.uploadDirectory'))
                 ->visibility(config('zeus-bolt.uploadVisibility'))
                 ->label('Dokumen Bukti Pembayaran')
-                ->visible(fn (Get $get): bool => (auth()->user()->hasRole('User') && $get('status') == 'MENUNGGU_PEMBAYARAN') || $get('status') == 'PEMBAYARAN_DITERIMA' ),
+                ->visible(fn (Get $get): bool => (auth()->user()->hasRole('Pelanggan') && $this->record->status == 'MENUNGGU_PEMBAYARAN') || $get('status') == 'PEMBAYARAN_DITERIMA' ),
 
             FileUpload::make('dokumen_output')
                 ->default(fn (Response $record) => $record->dokumen_output)
