@@ -322,4 +322,12 @@ class FormResource extends BoltResource
             ...$respNavs,
         ]);
     }
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        if (!auth()->user()->hasRole(['Admin Super', 'Admin'])) {
+            return false;
+        }
+        return static::$shouldRegisterNavigation;
+    }
 }
