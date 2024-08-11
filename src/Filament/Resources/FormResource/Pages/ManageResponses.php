@@ -4,6 +4,7 @@ namespace LaraZeus\Bolt\Filament\Resources\FormResource\Pages;
 
 use Filament\Forms\Components\DatePicker;
 use Filament\Resources\Pages\ManageRelatedRecords;
+use Filament\Support\Enums\ActionSize;
 use Filament\Tables;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -50,7 +51,7 @@ class ManageResponses extends ManageRelatedRecords
             $getFieldTableColumn = (new $field->type)->TableColumn($field);
 
             if ($getFieldTableColumn !== null) {
-                if (strpos($field->name, 'Nama') === false) {
+                if (strpos($field->name, 'Perusahaan') === false) {
                     $getFieldTableColumn
                         ->toggleable(isToggledHiddenByDefault: true);
                 }
@@ -116,40 +117,34 @@ class ManageResponses extends ManageRelatedRecords
             ->actions([
                 SetResponseStatus::make()
                     ->label(function ($record) { 
-                        return auth()->user()->hasRole(['Admin Super', 'Admin']) ? __( 'Set Status') : 'Unggah Bukti Pembayaran';
-                    })
-                    ->visible(function ($record) {
-                        return auth()->user()->hasRole(['Admin Super', 'Admin']) || (auth()->user()->hasRole(['Pelanggan']) && $record->status === 'MENUNGGU_PEMBAYARAN');
+                        if (auth()->user()->hasRole(['Admin Super', 'Admin']))
+                            return __( 'Set Status');
+                        else if ($record->status === 'MENUNGGU_PEMBAYARAN')
+                            return 'Unggah Bukti Pembayaran';
+                        else
+                            return 'Lihat Status dan Dokumen';
                     }),
                 Tables\Actions\Action::make('permohonan')
-                    ->label('Surat Permohonan')
-                    ->icon('heroicon-o-document')
-                    ->tooltip('Cetak KP-4')
+                    ->label('Permohonan')
+                    ->icon('heroicon-m-arrow-down-tray')
+                    ->tooltip('Unduh File Surat Permohonan')
                     ->color('warning')
                     ->url('/storage/' . $lampiranFieldResponse)
                     ->openUrlInNewTab()
                     ->visible(!empty($lampiranFieldResponse)),
-                Tables\Actions\Action::make('output')
-                    ->label('Dokumen Output')
-                    ->icon('heroicon-o-document')
-                    ->tooltip('Dokumen Output')
-                    ->color('success')
-                    ->url(function ($record) {
-                        return '/storage/' . $record->dokumen_output;
-                    })
-                    ->openUrlInNewTab()
-                    ->visible(function ($record) {
-                        return !empty($record->dokumen_output);
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\DeleteAction::make()->visible(function ($record) {
+                        return auth()->user()->hasRole(['Admin Super', 'Admin']) || ($record->status === 'SURAT_DITERIMA' && auth()->user()->id === $record->user_id);
                     }),
-                Tables\Actions\DeleteAction::make()->visible(function ($record) {
-                    return auth()->user()->hasRole(['Admin Super', 'Admin']) || ($record->status === 'SURAT_DITERIMA' && auth()->user()->id === $record->user_id);
-                }),
-                Tables\Actions\ForceDeleteAction::make()->visible(function () {
-                    return auth()->user()->hasRole(['Admin Super', 'Admin']);
-                }),
-                Tables\Actions\RestoreAction::make()->visible(function () {
-                    return auth()->user()->hasRole(['Admin Super', 'Admin']);
-                }),
+                    Tables\Actions\ForceDeleteAction::make()->visible(function () {
+                        return auth()->user()->hasRole(['Admin Super', 'Admin']);
+                    }),
+                    Tables\Actions\RestoreAction::make()->visible(function () {
+                        return auth()->user()->hasRole(['Admin Super', 'Admin']);
+                    }),
+                ])->icon('heroicon-m-ellipsis-vertical')
+                    ->size(ActionSize::Small)
+                    ->color('primary'),
             ])
             ->filters([
                 Tables\Filters\Filter::make('created_at')

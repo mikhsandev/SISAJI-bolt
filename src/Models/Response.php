@@ -33,6 +33,15 @@ class Response extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'dokumen_permohonan_disetujui' => 'array',
+        'dokumen_permohonan_ditolak' => 'array',
+        'dokumen_pelaksanaan' => 'array',
+        'dokumen_tagihan' => 'array',
+        'dokumen_bukti_pembayaran' => 'array',
+        'dokumen_output' => 'array',
+    ];
+
     public function getTable()
     {
         return config('zeus-bolt.table-prefix') . 'responses';
